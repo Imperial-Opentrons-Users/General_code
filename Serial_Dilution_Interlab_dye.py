@@ -34,10 +34,27 @@ def run(protocol: protocol_api.ProtocolContext):
 #distributing dye
     p300.pick_up_tip()
     for i in range(2):
-        p300.transfer(100,reservoir['A2'], plate['A'+str(i+1)], mix_before=(2, 75), touch_tip=True, blow_out=True, blowout_location='destination well',new_tip='never')
+        p300.transfer(
+        100,
+        reservoir['A2'],
+        plate['A'+str(i+1)],
+        mix_before=(1, 75),
+        mix_after=(1, 75),
+        blow_out=True,
+        blowout_location='destination well',
+        new_tip='never')
 #serial dilution
     for i in range(9):
-        p300.transfer(100,mix_before=(2, 75),plate['A'+str(i+2)], plate['A'+str(i+3)], mix_before=(2, 75), touch_tip=True, blow_out=True, blowout_location='destination well',new_tip='never')
+        p300.transfer(
+        100,
+        plate['A'+str(i+2)],
+        plate['A'+str(i+3)],
+        mix_before=(1, 75),
+        mix_after=(1, 75),,
+        blow_out=True,
+        blowout_location='destination well',
+        new_tip='never')
+        
     p300.drop_tip()
     for line in protocol.commands():
         print(line)
