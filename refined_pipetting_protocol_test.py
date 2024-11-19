@@ -68,7 +68,8 @@ def run(protocol: protocol_api.ProtocolContext):
     pipette_right.pick_up_tip()
     pipette_right.aspirate(100, source_plate['A2'].bottom(1), rate=slow)
     pipette_right.dispense(100, destination_plate['B2'].bottom(2), rate=vslow)
-    # mix-block commands - can separately define rates and well heights for each step
+    # mix function
+    # Block commands - can separately define rates and well heights for each step
     # Don't have to aspirate and dispense from same height
     # slower aspiration rates will give less chance of cavitation
     # higher dispense rates gives better mixing 
@@ -83,7 +84,7 @@ def run(protocol: protocol_api.ProtocolContext):
     # final slow aspirate and dispense to ensure good liquid recovery
     # push_out in final dispense adds specified volume beyond the stop - different from blow out
     pipette_right.aspirate(60, destination_plate['B2'].bottom(1), rate=slow)
-    pipette_right.dispense(60, destination_plate['B2'].bottom(3), rate=slow, push_out=1)
+    pipette_right.dispense(60, destination_plate['B2'].bottom(3), rate=vslow, push_out=1)
     # SLOWLY moving to a specific height in the well before blowout
     pipette_right.move_to(destination_plate['B2'].top(-5), speed=5) # move to 2mm below the top of current well
     # OR position can be specified in the .blow_out command, cannot include a rate OR speed argument.
