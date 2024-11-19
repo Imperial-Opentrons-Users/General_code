@@ -1,5 +1,5 @@
 from opentrons import protocol_api
-#may not be required, but can be used in code if specified 
+# numpy may not be required, but can be used in code if specified 
 # - needs to be done for any other packages used directly in code
 import numpy as np
 
@@ -52,15 +52,19 @@ def run(protocol: protocol_api.ProtocolContext):
         blowout_location="destination well", 
         new_tip='always',
         ) 
-    #below can be used with rate argument to set fraction of default flow rate
-    high=1.8
-    normal=1.0
-    slow=0.5
-    vslow=0.25
+
     # block commands
     # Set of commands below does a single transfer followed by a mix
     # Defining each step in turn enables much finer control of pipetting actions
     # VALUES SHOWN BELOW HAVE NOT BEEN VALIDATED IN TESTING - that's your job!
+    
+    # numbers below can be used with rate argument to set fraction of default flow rate
+    # you can globally change these, rather than adjusting each line of code separately
+    high=1.8
+    normal=1.0
+    slow=0.5
+    vslow=0.25
+
     pipette_right.pick_up_tip()
     pipette_right.aspirate(100, source_plate['A2'].bottom(1), rate=slow)
     pipette_right.dispense(100, destination_plate['B2'].bottom(2), rate=vslow)
