@@ -7,7 +7,7 @@ import numpy as np
 metadata = {
      'apiLevel': '2.19',
      'protocolName': 'Simple code test',
-     'description': 'use to evaluate simple pipetting and coding commands'
+     'description': 'use to evaluate refined pipetting and coding commands'
 }
 
 #Function that executes program
@@ -52,30 +52,34 @@ def run(protocol: protocol_api.ProtocolContext):
         blowout_location="destination well", 
         new_tip='always',
         ) 
-    
+    #below can be used with rate argument to set fraction of default flow rate
+    high=1.8
+    normal=1.0
+    slow=0.5
+    vslow=0.25
     # block commands
     # Set of commands below does a single transfer followed by a mix
     # Defining each step in turn enables much finer control of pipetting actions
     # VALUES SHOWN BELOW HAVE NOT BEEN VALIDATED IN TESTING - that's your job!
     pipette_right.pick_up_tip()
-    pipette_right.aspirate(100, source_plate['A2'].bottom(1), rate=0.5)
-    pipette_right.dispense(100, destination_plate['B2'].bottom(2), rate=0.25)
+    pipette_right.aspirate(100, source_plate['A2'].bottom(1), rate=slow)
+    pipette_right.dispense(100, destination_plate['B2'].bottom(2), rate=vslow)
     # mix-block commands - can separately define rates and well heights for each step
     # Don't have to aspirate and dispense from same height
     # slower aspiration rates will give less chance of cavitation
     # higher dispense rates gives better mixing 
     # slower final mix reduces chance of liquid remaining
     # rate=() sets rate as a fraction of the value defined in the global 'instrument_context.flow_rate' above
-    pipette_right.aspirate(50, destination_plate['B2'].bottom(3), rate=0.5)
-    pipette_right.dispense(50, destination_plate['B2'].bottom(1), rate=1)
-    pipette_right.aspirate(50, destination_plate['B2'].bottom(1), rate=0.5)
-    pipette_right.dispense(50, destination_plate['B2'].bottom(3), rate=0.75)
+    pipette_right.aspirate(50, destination_plate['B2'].bottom(3), rate=slow)
+    pipette_right.dispense(50, destination_plate['B2'].bottom(1), rate=high)
+    pipette_right.aspirate(50, destination_plate['B2'].bottom(1), rate=slow)
+    pipette_right.dispense(50, destination_plate['B2'].bottom(3), rate=(normal*.75))
     # short delay allows any excess liquid to settle in tip
     protocol.delay(seconds=0.5)
     # final slow aspirate and dispense to ensure good liquid recovery
-    # push_out in final dispense adds specified volume beyond the stop
-    pipette_right.aspirate(60, destination_plate['B2'].bottom(1), rate=0.25)
-    pipette_right.dispense(60, destination_plate['B2'].bottom(3), rate=0.25, push_out=1)
+    # push_out in final dispense adds specified volume beyond the stop - different from blow out
+    pipette_right.aspirate(60, destination_plate['B2'].bottom(1), rate=slow)
+    pipette_right.dispense(60, destination_plate['B2'].bottom(3), rate=slow, push_out=1)
     # SLOWLY moving to a specific height in the well before blowout
     pipette_right.move_to(destination_plate['B2'].top(-5), speed=5) # move to 2mm below the top of current well
     # OR position can be specified in the .blow_out command, cannot include a rate OR speed argument.
@@ -84,6 +88,7 @@ def run(protocol: protocol_api.ProtocolContext):
     # this version of touch tip sets the fraction of the tube radius for touching, so tip does not get bent
     # v_offset sets height negative number is below rim
     # speed = speed of tip movement so it does not crash around
+    # radius = sets the radius of the well diameter so the tip can be set to just touch
     pipette_right.touch_tip(radius=0.9, v_offset=-5, speed=10)
     pipette_right.drop_tip()
    
