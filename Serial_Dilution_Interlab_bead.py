@@ -1,6 +1,7 @@
 #Serial Dilution
-
-from opentrons import protocol_api
+from opentrons import simulate
+#from opentrons import protocol_api
+    protocol = simulate.get_protocol_api('2.8')
 
 metadata = {
 'protocolName': 'Serial dilution',
@@ -11,7 +12,7 @@ metadata = {
 # protocol run function. the part after the colon lets your editor know
 
 tiprack_num=1
-def run(protocol: protocol_api.ProtocolContext):
+#def run(protocol: protocol_api.ProtocolContext):
 
 #from opentrons import simulate
 #metadata = {'apiLevel': '2.8'}
